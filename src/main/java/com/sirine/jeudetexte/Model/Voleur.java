@@ -9,13 +9,12 @@ public class Voleur extends Personnage {
         super(nom, pointsDeVieMax, pointdevie, degat);
         this.energie = energie;
     }
+
     public Voleur(String nom) {
         // Valeurs par défaut pour un mage
-        super(nom, 80,80, 20);
+        super(nom, 80, 80, 20);
         this.energie = 5;
     }
-
-    
 
     public void attaquer(Personnage cible) {
         // Menu pour choisir une attaque
@@ -23,7 +22,7 @@ public class Voleur extends Personnage {
         System.out.println("1. Coup de base (20 dégâts)");
         System.out.println("2. double lame avec deux armes(40 dégâts, consomme de l'énergie)");
         System.out.println("3. pluie de dagues (40 dégâts, mais réduit vos points de vie de 5)");
-        System.out.println("Choisissez une compétence : ");
+        System.out.print("Choisissez une compétence : ");
         int choix = -1;
         try (Scanner scanner = new Scanner(System.in)) {
             while (choix < 1 || choix > 3) {
@@ -39,13 +38,13 @@ public class Voleur extends Personnage {
             }
 
             switch (choix) {
-                case 1 :
+                case 1:
                     coupBase(cible);
                     break; // Attaque normale
-                case 2 : 
+                case 2:
                     doublelame(cible);
                     break; // Attaque puissante
-                case 3 : 
+                case 3:
                     pluiedague(cible);
                     break; // Combo spécial
             }
@@ -54,7 +53,6 @@ public class Voleur extends Personnage {
         }
     }
 
-    
     private void coupBase(Personnage cible) {
         System.out.println(nom + " effectue un coup de base sur " + cible.getnom());
         cible.recevoirdegat(degat);
@@ -78,30 +76,31 @@ public class Voleur extends Personnage {
     }
 
     public void utilisercompetence(Personnage cible) {
-        
+
         System.out.println("\n--- Menu des Compétences Spéciales ---");
         System.out.println("1. des coup invisible de loin,-5 pv");
         System.out.println("2. une attaque de katana ");
         System.out.println("Choisissez une compétence : ");
         int choix = -1;
-        try (Scanner scanner = new Scanner(System.in))  {
+        try (Scanner scanner = new Scanner(System.in)) {
             choix = scanner.nextInt();
             switch (choix) {
-                case 1: 
+                case 1:
                     invisible(cible);
                     break;
-                case 2: 
+                case 2:
                     katana(cible);
                     break;
-                default: 
+                default:
                     System.out.println("Choix invalide, compétence annulée.");
                     break;
             }
         } catch (Exception e) {
             System.out.println("Erreur de saisie. Veuillez entrer un nombre valide.");
         }
-        
+
     }
+
     private void invisible(Personnage cible) {
         System.out.println(nom + " utilise des coup invisible . La cible " + cible.getnom());
         this.gagnerExperience(20);
@@ -128,15 +127,15 @@ public class Voleur extends Personnage {
         System.out.println("Choisissez une défense : ");
         try (Scanner scanner = new Scanner(System.in)) {
             int choix = scanner.nextInt();
-    
+
             switch (choix) {
-                case 1:  
+                case 1:
                     camouflage();
                     break;
-                case 2: 
+                case 2:
                     pickpv(cible);
                     break;
-                default: 
+                default:
                     System.out.println("Choix invalide, défense annulée.");
                     break;
             }
