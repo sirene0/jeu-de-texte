@@ -22,7 +22,7 @@ public class Mage extends Personnage {
         System.out.println("2. une sort elementaire de glace 18 degats");
         System.out.println("3. une sort elementaire de feu dragon 36 degat,mais réduit vos points de vie de 5");
         System.out.println("4. une sort elementaire de electricite(shidorii) feu feu 36 degat,2 energie");
-        System.out.println("Choisissez une attaque : ");
+        System.out.print("Choisissez une attaque : ");
 
         int choix = -1;
         try (Scanner scanner = new Scanner(System.in)) {

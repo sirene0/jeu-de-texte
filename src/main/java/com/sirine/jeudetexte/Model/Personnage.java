@@ -18,7 +18,7 @@ public abstract class Personnage implements Attaquable {
     private final String saveFilePath = "savefile.txt";
     private Timer timer;
 
-    public Personnage(String nom, int pointsDeVieMax,int pointdevie,int degat) {
+    public Personnage(String nom, int pointsDeVieMax, int pointdevie, int degat) {
         this.nom = nom;
         this.pointsDeVieMax = pointsDeVieMax;
         this.pointdevie = pointsDeVieMax;
@@ -64,7 +64,7 @@ public abstract class Personnage implements Attaquable {
                     System.exit(0);
                 }
             }
-        
+
         } else {
             sauvegarderEtat();
             System.out.println(nom + " a perdu tous ses cœurs et est définitivement éliminé !");
@@ -124,11 +124,10 @@ public abstract class Personnage implements Attaquable {
         }
     }
 
-
     public int getPointdevie() {
         return pointdevie;
     }
-    
+
     public int getCoeur() {
         return coeur;
     }

@@ -1,97 +1,60 @@
 package com.sirine.jeudetexte;
 
-import com.sirine.jeudetexte.Model.Personnage;
-import com.sirine.jeudetexte.Model.Mage;
-import com.sirine.jeudetexte.Model.Guerrier;
-import com.sirine.jeudetexte.Model.Voleur;
-
 import java.util.Scanner;
+import com.sirine.jeudetexte.Model.*;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        
-        // Character selection
-        System.out.println("Bienvenue dans le jeu de texte RPG !");
-        System.out.println("Choisissez votre personnage :");
-        System.out.println("1. Mage");
-        System.out.println("2. Guerrier");
-        System.out.println("3. Voleur");
-        
-        Personnage joueur = null;
-        Personnage ennemi = null;
-        
+
+        System.out.println("Bienvenue dans le jeu de texte RPG multijoueur !");
+
+        Personnage joueur1 = null;
+        Personnage joueur2 = null;
+
         try {
-            int choixPersonnage = scanner.nextInt();
-            System.out.print("Entrez le nom de votre personnage : ");
-            String nomPersonnage = scanner.next();
-            
-            // Create player character based on selection
-            switch (choixPersonnage) {
-                case 1:
-                    joueur = new Mage(nomPersonnage);
-                    break;
-                case 2:
-                    joueur = new Guerrier(nomPersonnage);
-                    break;
-                case 3:
-                    joueur = new Voleur(nomPersonnage);
-                    break;
-                default:
-                    System.out.println("Choix invalide. Sélection par défaut : Mage");
-                    joueur = new Mage(nomPersonnage);
-            }
-            
-            // Create enemy character
-            System.out.println("Un ennemi apparaît !");
-            ennemi = genererEnnemi();
-            
+            // Player 1 character creation
+            System.out.println("Joueur 1 - Choisissez votre personnage :");
+            System.out.println("1. Mage");
+            System.out.println("2. Guerrier");
+            System.out.println("3. Voleur");
+            System.out.print(">>> ");
+            int choixPersonnage1 = scanner.nextInt();
+            scanner.nextLine(); // Consomme la fin de ligne
+            System.out.print("Entrez le nom de votre personnage (Joueur 1) : ");
+            String nomPersonnage1 = scanner.nextLine();
+            joueur1 = creerPersonnage(choixPersonnage1, nomPersonnage1);
+
+            // Player 2 character creation
+            System.out.println("\nJoueur 2 - Choisissez votre personnage :");
+            System.out.println("1. Mage");
+            System.out.println("2. Guerrier");
+            System.out.println("3. Voleur");
+            System.out.print(">>> ");
+            int choixPersonnage2 = scanner.nextInt();
+            scanner.nextLine(); // Consomme la fin de ligne
+            System.out.print("Entrez le nom de votre personnage (Joueur 2) : ");
+            String nomPersonnage2 = scanner.nextLine();
+            joueur2 = creerPersonnage(choixPersonnage2, nomPersonnage2);
+
             // Main game loop
-            while (joueur.estvivant() && ennemi.estvivant()) {
-                afficherEtatPersonnages(joueur, ennemi);
-                
-                // Player's turn
-                System.out.println("\nTour de " + joueur.getnom());
-                System.out.println("Choisissez votre action :");
-                System.out.println("1. Attaquer");
-                System.out.println("2. Utiliser une compétence spéciale");
-                System.out.println("3. Défendre");
-                System.out.println("4. Se soigner");
-                
-                int choixAction = scanner.nextInt();
-                
-                switch (choixAction) {
-                    case 1:
-                        joueur.attaquer(ennemi);
-                        break;
-                    case 2:
-                        joueur.utilisercompetence(ennemi);
-                        break;
-                    case 3:
-                        joueur.defance(ennemi);
-                        break;
-                    case 4:
-                        joueur.soin();
-                        break;
-                    default:
-                        System.out.println("Action invalide. Attaque par défaut.");
-                        joueur.attaquer(ennemi);
-                }
-                
-                // Enemy's turn if still alive
-                if (ennemi.estvivant()) {
-                    System.out.println("\nTour de l'ennemi : " + ennemi.getnom());
-                    ennemi.attaquer(joueur);
-                }
+            while (joueur1.estvivant() && joueur2.estvivant()) {
+                afficherEtatPersonnages(joueur1, joueur2);
+
+                // Player 1's turn
+                System.out.println("\nTour de " + joueur1.getnom() + " (Joueur 1)");
+                executerTour(joueur1, joueur2, scanner);
+
+                if (!joueur2.estvivant())
+                    break;
+
+                // Player 2's turn
+                afficherEtatPersonnages(joueur1, joueur2);
+                System.out.println("\nTour de " + joueur2.getnom() + " (Joueur 2)");
+                executerTour(joueur2, joueur1, scanner);
             }
-            
-            // Game result
-            if (joueur.estvivant()) {
-                System.out.println("Félicitations ! Vous avez vaincu " + ennemi.getnom() + " !");
-            } else {
-                System.out.println("Game Over ! Vous avez été vaincu par " + ennemi.getnom() + ".");
-            }
-            
+
+            determinerVainqueur(joueur1, joueur2);
         } catch (Exception e) {
             System.out.println("Une erreur est survenue : " + e.getMessage());
             e.printStackTrace();
@@ -99,29 +62,85 @@ public class Main {
             scanner.close();
         }
     }
-    
-    // Method to generate a random enemy
-    private static Personnage genererEnnemi() {
-        int choixEnnemi = (int) (Math.random() * 3) + 1;
-        String[] nomsEnemis = {"Gobelin", "Orc", "Sorcier Noir"};
-        String nomEnnemi = nomsEnemis[(int) (Math.random() * nomsEnemis.length)];
-        
-        switch (choixEnnemi) {
+
+    private static Personnage creerPersonnage(int choix, String nom) {
+        switch (choix) {
             case 1:
-                return new Mage(nomEnnemi);
+                return new Mage(nom);
             case 2:
-                return new Guerrier(nomEnnemi);
+                return new Guerrier(nom);
             case 3:
-                return new Voleur(nomEnnemi);
+                return new Voleur(nom);
             default:
-                return new Mage(nomEnnemi);
+                System.out.println("Choix invalide. Sélection par défaut : Mage");
+                return new Mage(nom);
         }
     }
-    
-    // Method to display character status
-    private static void afficherEtatPersonnages(Personnage joueur, Personnage ennemi) {
+
+    private static void executerTour(Personnage attaquant, Personnage cible, Scanner scanner) {
+        int choixAction = -1;
+
+        // Input validation loop
+        while (true) {
+            try {
+                System.out.println("Choisissez votre action :");
+                System.out.println("1. Attaquer");
+                System.out.println("2. Utiliser une compétence spéciale");
+                System.out.println("3. Défendre");
+                System.out.println("4. Se soigner");
+                System.out.print(">>> ");
+
+                // Validate input
+                if (scanner.hasNextInt()) {
+                    choixAction = scanner.nextInt();
+                    scanner.nextLine(); // Clear the buffer
+                    if (choixAction >= 1 && choixAction <= 4) {
+                        break; // Valid input
+                    } else {
+                        System.out.println("Veuillez entrer un nombre entre 1 et 4.");
+                    }
+                } else {
+                    System.out.println("Entrée invalide. Veuillez entrer un nombre entier.");
+                    scanner.nextLine(); // Clear invalid input
+                }
+            } catch (Exception e) {
+                System.out.println("Une erreur est survenue lors de la saisie. Veuillez réessayer.");
+                scanner.nextLine(); // Clear the buffer in case of unexpected errors
+            }
+        }
+
+        // Perform action
+        switch (choixAction) {
+            case 1:
+                attaquant.attaquer(cible);
+                break;
+            case 2:
+                attaquant.utilisercompetence(cible);
+                break;
+            case 3:
+                attaquant.defance(cible);
+                break;
+            case 4:
+                attaquant.soin();
+                break;
+        }
+    }
+
+    private static void afficherEtatPersonnages(Personnage joueur1, Personnage joueur2) {
         System.out.println("\n--- État des personnages ---");
-        System.out.println(joueur.getnom() + " : Points de vie = " + joueur.getPointdevie() + ", Cœurs = " + joueur.getCoeur());
-        System.out.println(ennemi.getnom() + " : Points de vie = " + ennemi.getPointdevie() + ", Cœurs = " + ennemi.getCoeur());
+        System.out.println(joueur1.getnom() + " (Joueur 1) : Points de vie = " + joueur1.getPointdevie() +
+                ", Cœurs = " + joueur1.getCoeur());
+        System.out.println(joueur2.getnom() + " (Joueur 2) : Points de vie = " + joueur2.getPointdevie() +
+                ", Cœurs = " + joueur2.getCoeur());
+    }
+
+    private static void determinerVainqueur(Personnage joueur1, Personnage joueur2) {
+        if (joueur1.estvivant()) {
+            System.out.println("Félicitations ! " + joueur1.getnom() + " (Joueur 1) a vaincu " + joueur2.getnom()
+                    + " (Joueur 2) !");
+        } else {
+            System.out.println("Félicitations ! " + joueur2.getnom() + " (Joueur 2) a vaincu " + joueur1.getnom()
+                    + " (Joueur 1) !");
+        }
     }
 }

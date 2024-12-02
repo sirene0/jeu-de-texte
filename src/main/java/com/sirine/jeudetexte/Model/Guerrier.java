@@ -16,15 +16,14 @@ public class Guerrier extends Personnage {
         this.energie = 5;
     }
 
-
     public void attaquer(Personnage cible) {
         System.out.println("\n--- Choisissez une attaque ---");
         System.out.println("1. Coup de base (10 dégâts)");
         System.out.println("2. Attaque puissante (20 dégâts, consomme de l'énergie)");
         System.out.println("3. Combo furieux (30 dégâts, mais réduit vos points de vie de 5)");
         System.out.println("4. Coup d'arme hache ghost 40 dégâts ");
-        System.out.println("Choisissez une compétence : ");
-    
+        System.out.print("Choisissez une compétence : ");
+
         int choix = -1;
         try (Scanner scanner = new Scanner(System.in)) {
             while (choix < 1 || choix > 4) {
@@ -38,18 +37,18 @@ public class Guerrier extends Personnage {
                     scanner.next(); // consomme l'entrée invalide
                 }
             }
-    
+
             switch (choix) {
-                case 1: 
+                case 1:
                     coupDeBase(cible);
-                    break; 
-                case 2: 
+                    break;
+                case 2:
                     attaquePuissante(cible);
-                    break; 
-                case 3: 
+                    break;
+                case 3:
                     comboFurieux(cible);
-                    break; 
-                case 4: 
+                    break;
+                case 4:
                     hacheghost(cible);
                     break;
             }
