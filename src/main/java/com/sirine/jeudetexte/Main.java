@@ -39,6 +39,8 @@ public class Main {
 
             // Main game loop
             while (joueur1.estvivant() && joueur2.estvivant()) {
+                System.out.println("---------------------------------------------------------------------");
+
                 afficherEtatPersonnages(joueur1, joueur2);
 
                 // Player 1's turn
@@ -49,6 +51,8 @@ public class Main {
                     break;
 
                 // Player 2's turn
+                System.out.println("---------------------------------------------------------------------");
+
                 afficherEtatPersonnages(joueur1, joueur2);
                 System.out.println("\nTour de " + joueur2.getnom() + " (Joueur 2)");
                 executerTour(joueur2, joueur1, scanner);
@@ -83,6 +87,7 @@ public class Main {
         // Input validation loop
         while (true) {
             try {
+                System.out.println("---------------------------------------------------------------------");
                 System.out.println("Choisissez votre action :");
                 System.out.println("1. Attaquer");
                 System.out.println("2. Utiliser une compétence spéciale");
@@ -112,16 +117,24 @@ public class Main {
         // Perform action
         switch (choixAction) {
             case 1:
-                attaquant.attaquer(cible);
+                // segmi fonctionalite attaquer
+                // attaquant.attaquer(cible);
+                System.out.println("Attaque effectuée");
                 break;
             case 2:
-                attaquant.utilisercompetence(cible);
+            // segmi fonctionalite utilisercompetence
+                // attaquant.utilisercompetence(cible);
+                System.out.println("Compétence spéciale utilisée");
                 break;
             case 3:
-                attaquant.defance(cible);
+                // segmi fonctionalite defance
+                // attaquant.defance(cible);
+                System.out.println("Défense effectuée");
                 break;
             case 4:
-                attaquant.soin();
+                // segmi fonctionalite soin
+                // attaquant.soin();
+                System.out.println("Soins effectués");
                 break;
         }
     }
