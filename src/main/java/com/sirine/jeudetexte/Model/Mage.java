@@ -16,7 +16,7 @@ public class Mage extends Personnage {
         this.energie = 5;
     }
 
-    public void attaquer(Personnage cible) {
+    public void attaquer(Personnage cible,Scanner scanner) {
         System.out.println("\n--- Choisissez une attaque ---");
         System.out.println("1. une sort elementaire de Feu 18 degats ");
         System.out.println("2. une sort elementaire de glace 18 degats");
@@ -25,8 +25,9 @@ public class Mage extends Personnage {
         System.out.print("Choisissez une attaque : ");
 
         int choix = -1;
-        try (Scanner scanner = new Scanner(System.in)) {
-            while (choix < 1 || choix > 4) {
+
+        while (choix < 1 || choix > 4) {
+            try {
                 if (scanner.hasNextInt()) {
                     choix = scanner.nextInt();
                     if (choix < 1 || choix > 4) {
@@ -36,41 +37,43 @@ public class Mage extends Personnage {
                     System.out.println("Erreur de saisie. Veuillez entrer un nombre valide.");
                     scanner.next(); // consomme l'entrée invalide
                 }
+            } catch (Exception e) {
+                System.out.println("Erreur de saisie. Veuillez entrer un nombre valide.");
             }
-
-            switch (choix) {
-                case 1:
-                    Feu(cible);
-                    break;
-                case 2:
-                    glace(cible);
-                    break;
-                case 3:
-                    feudragon(cible);
-                    break;
-                case 4:
-                    electricite(cible);
-                    break;
-            }
-        } catch (Exception e) {
-            System.out.println("Erreur de saisie. Veuillez entrer un nombre valide.");
+        }
+        switch (choix) {
+            case 1:
+                Feu(cible);
+                break;
+            case 2:
+                glace(cible);
+                break;
+            case 3:
+                feudragon(cible);
+                break;
+            case 4:
+                electricite(cible);
+                break;
         }
     }
 
     private void Feu(Personnage cible) {
         System.out.println(nom + "utilise une sort basic de feu sur " + cible.getnom());
         cible.recevoirdegat(degat);
+        this.gagnerExperience(3);
     }
 
     private void glace(Personnage cible) {
         System.out.println(nom + "utilise une sort basic de glace sur " + cible.getnom());
         cible.recevoirdegat(degat);
+        this.gagnerExperience(3);
     }
 
     private void feudragon(Personnage cible) {
         System.out.println(nom + "utilise une sort feu de dragon sur " + cible.getnom());
         cible.recevoirdegat(2 * degat);
         pointdevie -= 5;
+        this.gagnerExperience(5);
         System.out.println("Effets secondaires : -5 PV. PV restants : " + pointdevie);
     }
 
@@ -79,37 +82,42 @@ public class Mage extends Personnage {
             System.out.println(nom + "utilise une sort d'electricite sur " + cible.getnom());
             cible.recevoirdegat(2 * degat);
             energie -= 2;
+            this.gagnerExperience(5);
             System.out.println("Coûts : -2 energie. energie restants : " + energie);
         } else {
             System.out.println(nom + " n'a plus assez de energie pour cette attaque.");
         }
     }
 
-    public void utilisercompetence(Personnage cible) {
+    public void utilisercompetence(Personnage cible,Scanner scanner) {
         // Menu pour choisir une attaque special
         System.out.println("\n--- Choisissez une attaque ---");
         System.out.println("1. Magie noire Manipulation de la gravite 36 degats ,3 energie ");
         System.out.println("2. Magie noire Flammes internales 45 degat ,10pv,3 energie");
         int choix = -1;
-        try (Scanner scanner = new Scanner(System.in)) {
-            choix = scanner.nextInt();
-
-            switch (choix) {
-                case 1:
-                    Manipulationgravite(cible);
-                    break;
-                case 2:
-                    Flammesinternales(cible);
-                    break;
-
-                default:
-                    System.out.println("Choix invalide, attaque annulée.");
-                    break;
+        while (choix < 1 || choix > 4) {
+            try {
+                if (scanner.hasNextInt()) {
+                    choix = scanner.nextInt();
+                    if (choix < 1 || choix > 4) {
+                        System.out.println("Choix invalide, veuillez entrer un nombre entre 1 et 4.");
+                    }
+                } else {
+                    System.out.println("Erreur de saisie. Veuillez entrer un nombre valide.");
+                    scanner.next(); // consomme l'entrée invalide
+                }
+            } catch (Exception e) {
+                System.out.println("Erreur de saisie. Veuillez entrer un nombre valide.");
             }
-        } catch (Exception e) {
-            System.out.println("Erreur de saisie. Veuillez entrer un nombre valide.");
         }
-
+        switch (choix) {
+            case 1:
+                Manipulationgravite(cible);
+                break;
+            case 2:
+                Flammesinternales(cible);
+                break;
+        }
     }
 
     private void Manipulationgravite(Personnage cible) {
@@ -117,6 +125,7 @@ public class Mage extends Personnage {
             System.out.println(nom + "utilise magie noire manipulation de  la gravite sur " + cible.getnom());
             cible.recevoirdegat(2 * degat);
             energie -= 3;
+            this.gagnerExperience(15);
             System.out.println("Coûts : -3 energie. energie restants : " + energie);
         } else {
             System.out.println(nom + " n'a plus assez de energie pour cette attaque.");
@@ -129,6 +138,7 @@ public class Mage extends Personnage {
             cible.recevoirdegat(2 * degat + 9);
             energie -= 3;
             pointdevie -= 10;
+            this.gagnerExperience(15);
             System.out.println("Coûts : -3 energie. energie restants : " + energie
                     + "Coûts : -10 point de vie. point de vie restant" + pointdevie);
         } else {
@@ -136,51 +146,61 @@ public class Mage extends Personnage {
         }
     }
 
-    public void defance(Personnage cible) {
+    public void defance(Personnage cible,Scanner scanner) {
 
         System.out.println("\n--- Menu des Défenses ---");
         System.out.println("1. bouclier magique ");
         System.out.println("2. inverser l'attaque");
         System.out.println("3. camouflage murre de mana ");
         System.out.println("Choisissez une défense : ");
-        try (Scanner scanner = new Scanner(System.in)) {
-            int choix = scanner.nextInt();
-            switch (choix) {
-                case 1:
-                    boucliermagique(cible);
-                    break;
-                case 2:
-                    inverser(cible);
-                    break;
-                case 3:
-                    murremana(cible);
-                    break;
-                default:
-                    System.out.println("Choix invalide, défense annulée.");
-                    break;
+        int choix = -1;
+    
+        while (choix < 1 || choix > 4) {
+            try {
+                if (scanner.hasNextInt()) {
+                    choix = scanner.nextInt();
+                    if (choix < 1 || choix > 4) {
+                        System.out.println("Choix invalide, veuillez entrer un nombre entre 1 et 4.");
+                    }
+                } else {
+                    System.out.println("Erreur de saisie. Veuillez entrer un nombre valide.");
+                    scanner.next(); // consomme l'entrée invalide
+                }
+            } catch (Exception e) {
+                System.out.println("Erreur de saisie. Veuillez entrer un nombre valide.");
             }
-        } catch (Exception e) {
-            System.out.println("Erreur de saisie. Veuillez entrer un nombre valide.");
         }
+        switch (choix) {
+            case 1:
+                boucliermagique(cible);
+                break;
+            case 2:
+                inverser(cible);
+                break;
+            case 3:
+                murremana(cible);
+                break;
+        }
+
     }
 
     private void boucliermagique(Personnage cible) {
         System.out.println(nom + " utilise un bouclier magique contre " + cible.getnom());
         cible.recevoirdegat(degat / 2);
-        this.gagnerExperience(10);
+        this.gagnerExperience(3);
     }
 
     private void inverser(Personnage cible) {
         System.out.println(nom + " inverser l'attaque  contre " + cible.getnom());
         cible.recevoirdegat(degat);
-        this.gagnerExperience(10);
+        this.gagnerExperience(3);
     }
 
     private void murremana(Personnage cible) {
         if (energie > 0) {
             System.out.println(nom + " utilise un murre de mana  contrer " + cible.getnom());
             cible.recevoirdegat(degat);
-            this.gagnerExperience(15);
+            this.gagnerExperience(3);
             energie--;
         } else {
             System.out.println(nom + " n'a pas assez d'énergie pour cette défense.");
@@ -199,4 +219,5 @@ public class Mage extends Personnage {
             System.out.println(nom + " n'a pas assez d'énergie pour se soigner.");
         }
     }
+
 }

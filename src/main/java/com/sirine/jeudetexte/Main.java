@@ -118,22 +118,22 @@ public class Main {
         switch (choixAction) {
             case 1:
                 // segmi fonctionalite attaquer
-                // attaquant.attaquer(cible);
+                attaquant.attaquer(cible,scanner);
                 System.out.println("Attaque effectuée");
                 break;
             case 2:
             // segmi fonctionalite utilisercompetence
-                // attaquant.utilisercompetence(cible);
+                attaquant.utilisercompetence(cible,scanner);
                 System.out.println("Compétence spéciale utilisée");
                 break;
             case 3:
                 // segmi fonctionalite defance
-                // attaquant.defance(cible);
+                attaquant.defance(cible,scanner);
                 System.out.println("Défense effectuée");
                 break;
             case 4:
                 // segmi fonctionalite soin
-                // attaquant.soin();
+                attaquant.soin();
                 System.out.println("Soins effectués");
                 break;
         }
@@ -156,4 +156,6 @@ public class Main {
                     + " (Joueur 1) !");
         }
     }
+
+
 }
